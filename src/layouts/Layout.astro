@@ -1,0 +1,191 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  brand?: string;
+}
+const {
+  title,
+  description = "个人作品集与简历 · 跨境电商运营 / AI 副业",
+  brand = "JACKY",
+} = Astro.props;
+
+const navLinks = [
+  { href: "#about", label: "关于" },
+  { href: "#experience", label: "经历" },
+  { href: "#projects", label: "作品" },
+  { href: "#skills", label: "技能" },
+  { href: "#contact", label: "联系" },
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = t;
+          document.documentElement.classList.add("js");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-nav">
+      <a class="brand" href="#top">{brand}</a>
+      <div class="nav-right">
+        <nav>
+          {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式">🌓</button>
+      </div>
+    </header>
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} {brand} · 用 Astro 构建</p>
+    </footer>
+
+    <style is:global>
+      :root {
+        --bg: #ffffff;
+        --bg-soft: #f7f8fb;
+        --text: #0f172a;
+        --text-soft: #475569;
+        --border: #e2e8f0;
+        --card: #ffffff;
+        --brand: #6366f1;
+        --brand-2: #a855f7;
+        --radius: 16px;
+        --maxw: 960px;
+        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      [data-theme="dark"] {
+        --bg: #0b1020;
+        --bg-soft: #111827;
+        --text: #e5e7eb;
+        --text-soft: #9ca3af;
+        --border: #1f2937;
+        --card: #0f172a;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        transition: background .3s ease, color .3s ease;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+      .site-nav {
+        position: sticky; top: 0; z-index: 50;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 24px;
+        background: color-mix(in srgb, var(--bg) 80%, transparent);
+        backdrop-filter: saturate(160%) blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+      .site-nav .brand { font-weight: 800; font-size: 18px; letter-spacing: .3px; }
+      .nav-right { display: flex; align-items: center; gap: 18px; }
+      .site-nav nav { display: flex; gap: 22px; }
+      .site-nav nav a {
+        color: var(--text-soft); font-size: 15px; font-weight: 500;
+        transition: color .2s;
+      }
+      .site-nav nav a:hover { color: var(--brand); }
+      .theme-toggle {
+        width: 38px; height: 38px; border-radius: 50%;
+        border: 1px solid var(--border); background: transparent; color: var(--text);
+        cursor: pointer; font-size: 15px; display: grid; place-items: center;
+        transition: border-color .2s, transform .2s;
+      }
+      .theme-toggle:hover { border-color: var(--brand); transform: rotate(15deg); }
+
+      section { padding: 76px 0; }
+      .section-title {
+        font-size: 28px; font-weight: 800; margin-bottom: 6px;
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        display: inline-block;
+      }
+      .section-sub { color: var(--text-soft); margin-bottom: 32px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+
+      .btn {
+        display: inline-block; padding: 12px 22px; border-radius: 999px;
+        font-weight: 600; font-size: 15px; transition: transform .15s, box-shadow .2s, border-color .2s;
+      }
+      .btn-primary {
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+        color: #fff; box-shadow: 0 8px 24px rgba(99, 102, 241, .35);
+      }
+      .btn-primary:hover { transform: translateY(-2px); }
+      .btn-ghost { border: 1px solid var(--border); color: var(--text); }
+      .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
+
+      .site-footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 24px; text-align: center; color: var(--text-soft); font-size: 14px;
+      }
+
+      /* 滚动揭示动效：仅在启用 JS 时初始隐藏，避免无脚本环境内容不可见 */
+      .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+      .js .reveal.visible { opacity: 1; transform: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .js .reveal { opacity: 1; transform: none; transition: none; }
+      }
+
+      @media (max-width: 640px) {
+        .site-nav nav { gap: 14px; }
+        .site-nav nav a { font-size: 13px; }
+        .nav-right { gap: 12px; }
+        section { padding: 52px 0; }
+      }
+    </style>
+
+    <script>
+      // 主题切换
+      const btn = document.getElementById("theme-toggle");
+      const root = document.documentElement;
+      const syncIcon = () => {
+        btn.textContent = root.dataset.theme === "dark" ? "☀️" : "🌙";
+      };
+      syncIcon();
+      btn?.addEventListener("click", () => {
+        const next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("theme", next); } catch (e) {}
+        syncIcon();
+      });
+
+      // 滚动揭示
+      const els = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12 });
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add("visible"));
+      }
+    </script>
+  </body>
+</html>
